@@ -1,0 +1,105 @@
+#include <stdio.h>
+
+#define LEFT 0
+#define RIGHT 1
+
+
+void printPermutation(int a[], int n) {
+    int i;
+    for(i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+
+
+int getMobile(int a[], int dir[], int n) {
+    int mobile = 0, mobile_prev = 0;
+    int i;
+
+    for(i = 0; i < n; i++) {
+
+      
+        if(dir[a[i]-1] == LEFT && i != 0) {
+            if(a[i] > a[i-1] && a[i] > mobile_prev) {
+                mobile = a[i];
+                mobile_prev = mobile;
+            }
+        }
+
+        // RIGHT direction
+        if(dir[a[i]-1] == RIGHT && i != n-1) {
+            if(a[i] > a[i+1] && a[i] > mobile_prev) {
+                mobile = a[i];
+                mobile_prev = mobile;
+            }
+        }
+    }
+
+    return mobile;
+}
+
+
+void johnsonTrotter(int n) {
+    int a[n], dir[n];
+    int i, j;
+
+    // Initialize permutation
+    for(i = 0; i < n; i++) {
+        a[i] = i + 1;
+        dir[i] = LEFT;
+    }
+
+    printPermutation(a, n);
+
+    for(i = 1; i < n; i++) {
+
+        int mobile = getMobile(a, dir, n);
+
+        if(mobile == 0)
+            return;
+
+        int pos;
+
+        for(j = 0; j < n; j++) {
+            if(a[j] == mobile) {
+                pos = j;
+                break;
+            }
+        }
+
+       
+        if(dir[mobile-1] == LEFT) {
+            int temp = a[pos];
+            a[pos] = a[pos-1];
+            a[pos-1] = temp;
+            pos--;
+        }
+        else if(dir[mobile-1] == RIGHT) {
+            int temp = a[pos];
+            a[pos] = a[pos+1];
+            a[pos+1] = temp;
+            pos++;
+        }
+
+        
+        for(j = 0; j < n; j++) {
+            if(a[j] > mobile)
+                dir[a[j]-1] = !dir[a[j]-1];
+        }
+
+        printPermutation(a, n);
+
+        i = 0;
+    }
+}
+
+int main() {
+    int n;
+
+    printf("Enter value of n: ");
+    scanf("%d", &n);
+
+    johnsonTrotter(n);
+
+    return 0;
+}
