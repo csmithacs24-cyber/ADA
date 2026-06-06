@@ -1,0 +1,49 @@
+#include<stdio.h>
+int main(){
+    int n,i,j,k,a,b,u,v,min,mincost=0;
+    int cost[10][10];
+    int parent[10]={0};
+    printf("enter no. of edges");
+    scanf("%d",&n);
+    printf("enter cost matrix\n");
+    for(i=1;i<=n;i++){
+        for(j=1;j<=n;j++){
+            scanf("%d",&cost[i][j]);
+            if(cost[i][j]==0){
+                cost[i][j]=999;
+            }
+        }
+    }
+    i=0;
+    printf("edges of mst are:\n");
+    while(i!=n-1){
+        min=999;
+        for(u=1;u<=n;u++){
+            for(v=1;v<=n;v++){
+                if(cost[u][v]<min){
+                    min=cost[u][v];
+                    a=u;
+                    b=v;
+                }
+            }
+        }
+        j=a;
+        while(parent[j]!=0){
+            j=parent[j];
+        }
+        k=b;
+        while(parent[k]!=0){
+            k=parent[k];
+        }
+        if(j!=k){
+            i++;
+            printf("(%d,%d)= %d\n",a,b,min);
+            mincost=mincost+min;
+            parent[k]=j;
+        }
+        cost[a][b]=999;
+        cost[b][a]=999;
+    }
+    printf("minimum cost of mst is:%d",mincost);
+    return 0;
+}
